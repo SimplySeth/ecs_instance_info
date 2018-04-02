@@ -150,6 +150,9 @@ def main():
     results['instances'] = sorted(instances)
     output = OrderedDict(sorted(results.items(), key=lambda t: t[0]))
     result['results'] = output
+  except ecs.exceptions.ClusterNotFoundException:
+    result['changed'] = False
+    module.fail_json(msg="No cluster named: {}".format(module.params['cluster']))
   except Exception as e:
     result['changed'] = False
     module.fail_json(msg=e.message)
